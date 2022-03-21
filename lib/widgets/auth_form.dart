@@ -201,6 +201,8 @@ class _AuthFormState extends State<AuthForm> {
                                 _isLogin = !_isLogin;
                               }
                             });
+
+                            _tryLogin();
                           },
                           child: Padding(
                             padding: EdgeInsets.symmetric(
