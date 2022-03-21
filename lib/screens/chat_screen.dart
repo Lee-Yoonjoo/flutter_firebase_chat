@@ -3,13 +3,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChatScreen extends StatelessWidget {
   bool isConnected = false;
+  String collectionPath = 'chats/NwC82NLL2WPoxO48FGZc/messages';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
-            .collection('chats/NwC82NLL2WPoxO48FGZc/messages')
+            .collection(collectionPath)
             .snapshots(),
         builder: (context, streamSnapshot) {
           if (streamSnapshot.connectionState == ConnectionState.waiting) {
@@ -34,14 +35,11 @@ class ChatScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          /*         FirebaseFirestore.instance
-              .collection('chats/NwC82NLL2WPoxO48FGZc/messages')
-              .snapshots()
-              .listen((event) {
-            event.docs.forEach((element) {
-              print('ForEach ' + element['text']);
-            });
-          });*/
+         FirebaseFirestore.instance.collection(collectionPath).add({
+           //add data as Map
+           'text':'This was added by clicking + button'
+
+         });
         },
       ),
     );
