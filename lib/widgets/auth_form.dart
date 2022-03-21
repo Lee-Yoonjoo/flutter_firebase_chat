@@ -30,7 +30,7 @@ class _AuthFormState extends State<AuthForm> {
     if (isValid) {
       _formKey.currentState?.save();
       widget.submitFunction(
-        _userEmail, _userPassword, _userName, _isLogin
+        _userEmail.trim(), _userPassword.trim(), _userName.trim(), _isLogin
       );
     }
   }
