@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 
 class AuthForm extends StatefulWidget {
+  AuthForm(this.submitFunction);
+
+  final void Function(
+          String email, String password, String username, bool isLogin)
+      submitFunction;
+
   @override
   State<StatefulWidget> createState() => _AuthFormState();
 }
@@ -23,9 +29,9 @@ class _AuthFormState extends State<AuthForm> {
     FocusScope.of(context).unfocus();
     if (isValid) {
       _formKey.currentState?.save();
-      print(_userEmail);
-      print(_userName);
-      print(_userPassword);
+      widget.submitFunction(
+        _userEmail, _userPassword, _userName, _isLogin
+      );
     }
   }
 
@@ -70,7 +76,7 @@ class _AuthFormState extends State<AuthForm> {
                         TextFormField(
                           key: ValueKey('email'),
                           validator: (value) {
-                            if(_formFlipped) return null;
+                            if (_formFlipped) return null;
                             if (emailController.text.isEmpty ||
                                 !emailController.text.contains('@')) {
                               return 'Please enter a valid email address.';
@@ -207,12 +213,14 @@ class _AuthFormState extends State<AuthForm> {
                         TextButton(
                           onPressed: () {
                             setState(() {
-                              if(!_isLogin){
+                              if (!_isLogin) {
                                 _isLogin = !_isLogin;
                               }
                             });
                           },
-                          child: Text(_isLogin ? 'Forgot your password?' : 'I have an account'),
+                          child: Text(_isLogin
+                              ? 'Forgot your password?'
+                              : 'I have an account'),
                           style: TextButton.styleFrom(
                             primary: Theme.of(context).backgroundColor,
                           ),
