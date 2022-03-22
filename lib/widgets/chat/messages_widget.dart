@@ -32,7 +32,6 @@ class MessagesWidget extends StatelessWidget {
         // Method 2 Use FutureBuilder<User> so you can call data easier.
         // Method 3 Without FutureBuilder call FirebaseAuth.instance.currentUser.
 
-
         User? u2 = FirebaseAuth.instance.currentUser;
         print("Future -- ${futureSnapshot.data}");
         print("Object -- ${FirebaseAuth.instance.currentUser}");
@@ -56,9 +55,12 @@ class MessagesWidget extends StatelessWidget {
                 reverse: true,
                 itemCount: chatSnapshot.data?.docs.length,
                 itemBuilder: (context, index) => MessageBubbleWidget(
-                    chatSnapshot.data?.docs[index]['text'],
-                    chatSnapshot.data?.docs[index]['uid'] ==
-                        futureSnapshot.data!.uid),
+                  chatSnapshot.data?.docs[index]['text'],
+                  chatSnapshot.data?.docs[index]['uid'] ==
+                      futureSnapshot.data!.uid,
+                 // on Udemy course He added this key to make sure but it works without it. Need to know why.
+                 // key: ValueKey(chatSnapshot.data?.docs[index].id),
+                ),
               );
               print(FirebaseAuth.instance.currentUser);
             });
