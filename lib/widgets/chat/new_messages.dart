@@ -1,17 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class NewMessageWidget extends StatefulWidget {
+class NewMessage extends StatefulWidget {
   @override
-  _NewMessageWidgetState createState() => _NewMessageWidgetState();
+  _NewMessageState createState() => _NewMessageState();
 }
 
-class _NewMessageWidgetState extends State<NewMessageWidget> {
+class _NewMessageState extends State<NewMessage> {
+  final _newMessageController = new TextEditingController();
+
   var _enteredMessage = '';
 
-  void _sendMessage(){
+  void _sendMessage() {
     FocusScope.of(context).unfocus();
-    FirebaseFirestore.instance.collection('chat').add({'text': _enteredMessage});
+    FirebaseFirestore.instance.collection('chat').add({
+      'text': _enteredMessage,
+      'timestamp': Timestamp.now(),
+    });
+    _newMessageController.clear();
   }
 
   @override
@@ -23,6 +29,7 @@ class _NewMessageWidgetState extends State<NewMessageWidget> {
         children: <Widget>[
           Expanded(
             child: TextFormField(
+              controller: _newMessageController,
               decoration: InputDecoration(labelText: 'Send a message...'),
               onChanged: (value) {
                 setState(() {
