@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class AuthForm extends StatefulWidget {
-  AuthForm(this.submitFunction);
+  AuthForm(this.submitFunction, this.isLoading);
 
+  final bool isLoading;
   final void Function(
           String email, String password, String username, bool isLogin)
       submitFunction;
@@ -24,14 +25,13 @@ class _AuthFormState extends State<AuthForm> {
   var _userName = '';
   var _userPassword = '';
 
-  void _tryLogin() {
+  void _trySubmit() {
     final isValid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
     if (isValid) {
       _formKey.currentState?.save();
       widget.submitFunction(
-        _userEmail.trim(), _userPassword.trim(), _userName.trim(), _isLogin
-      );
+          _userEmail.trim(), _userPassword.trim(), _userName.trim(), _isLogin);
     }
   }
 
@@ -189,29 +189,34 @@ class _AuthFormState extends State<AuthForm> {
                         const SizedBox(
                           height: 16,
                         ),
-                        if (_isLogin)
+                        if (widget.isLoading) CircularProgressIndicator(),
+                        if (!widget.isLoading)
+                          if (_isLogin)
+                            ElevatedButton(
+                              onPressed: _trySubmit,
+                              child: const Text('Login'),
+                            ),
+                        if (!widget.isLoading)
                           ElevatedButton(
-                            onPressed: _tryLogin,
-                            child: const Text('Login'),
-                          ),
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              if (_isLogin) {
-                                _isLogin = !_isLogin;
-                              }
-                            });
+                            onPressed: () {
+                              setState(() {
+                                if (_isLogin) {
+                                  _isLogin = !_isLogin;
+                                }
+                              });
 
-                            _tryLogin();
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 10),
-                            child: Text('Create new account'),
+                              if (!_isLogin) {
+                                _trySubmit();
+                              }
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 10),
+                              child: Text('Create new account'),
+                            ),
+                            style:
+                                ElevatedButton.styleFrom(primary: Colors.green),
                           ),
-                          style:
-                              ElevatedButton.styleFrom(primary: Colors.green),
-                        ),
                         TextButton(
                           onPressed: () {
                             setState(() {
